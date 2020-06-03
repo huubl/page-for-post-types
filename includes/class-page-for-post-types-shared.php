@@ -200,7 +200,7 @@ class Page_For_Post_Types_Shared {
 	public function get_rewrite_slug( $the_post ) {
 
 		$permalink = get_the_permalink( $the_post );
-		$domain    = trailingslashit( site_url() );
+		$domain    = trailingslashit( home_url() );
 
 		return untrailingslashit( str_replace( $domain, '', $permalink ) );
 	}
