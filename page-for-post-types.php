@@ -13,7 +13,7 @@
  * @package           Page_For_Post_Types
  *
  * @wordpress-plugin
- * Plugin Name:       Page For Post Types
+ * Plugin Name:       Page For Post Types - SMDZR
  * Plugin URI:        https://cnpagency.com
  * Description:       Select pages to use as custom post type archives just like the native WordPress <code>page_for_posts</code> setting.
  * Version:           1.0.0

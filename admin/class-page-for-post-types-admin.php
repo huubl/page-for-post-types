@@ -170,7 +170,7 @@ class Page_For_Post_Types_Admin {
 			<?php
 			foreach ( $post_types as $post_type ) {
 
-				$option_name = $shared->option_name( $post_type->name );
+				$option_name = $shared->option_name( $post_type->name ).ICL_LANGUAGE_CODE;
 				?>
                 <tr>
                     <th scope="row"><?php printf( __( 'Page for %s', 'lcs-core' ), $post_type->label ); ?></th>
@@ -258,15 +258,32 @@ class Page_For_Post_Types_Admin {
 		$shared = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
 
 		$post_types = $shared->get_page_for_post_type_objects();
-		foreach ( $post_types as $post_type ) {
 
-			register_setting( 'reading', $shared->option_name( $post_type->name ), [
-				'type'              => 'integer',
-				'sanitize_callback' => [
-					$this,
-					'sanitize_input_save'
-				]
-			] );
+//        var_dump($post_types);
+
+
+
+		foreach ( $post_types as $post_type ) {
+            
+//            if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
+//                //            echo ICL_LANGUAGE_CODE;
+//
+//                $languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
+//
+//                if ( !empty( $languages ) ) {
+//                    foreach( $languages as $l ) {
+                        register_setting( 'reading', $shared->option_name( $post_type->name ). ICL_LANGUAGE_CODE, [
+                            'type'              => 'integer',
+                            'sanitize_callback' => [
+                                $this,
+                                'sanitize_input_save'
+                            ]
+                        ] );
+//                    }
+//                }
+//            }
+
+
 		}
 
 		register_setting( 'reading', 'page_for_post_type_keys_hidden', [ 'type' => 'hidden' ] );
@@ -291,6 +308,9 @@ class Page_For_Post_Types_Admin {
 		}
 
 		$shared = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
+
+
+//		var_dump($the_post);
 
 		if ( $shared->is_page_for_post_types( $the_post ) ) {
 			$obj = $shared->get_page_for_post_type_object( $the_post );
@@ -325,6 +345,8 @@ class Page_For_Post_Types_Admin {
 
 			$post_type = get_post_type();
 			$page_id   = Page_For_Post_Types_Functions::get_page_for( $post_type );
+            $page_id = apply_filters( 'wpml_object_id', $page_id, 'page');
+            
 			if ( ! $page_id ) {
 				return false;
 			}
@@ -357,6 +379,36 @@ class Page_For_Post_Types_Admin {
 			'title' => apply_filters( 'page_for_post_types_admin_bar_menu_title', $title ),
 			'href'  => apply_filters( 'page_for_post_types_admin_bar_menu_link', get_edit_post_link( $page_id ) ),
 		) );
+
+
+
+
+//        add_filter('get_edit_post_link', function($link, $post_id, $context) {
+//
+//            if (function_exists('icl_get_languages') && defined('WPML_TM_VERSION') && !is_admin() &&
+//                ICL_LANGUAGE_CODE != apply_filters('wpml_default_language', NULL ) ) {
+//
+//                global $wpdb;
+//
+//                $sql = $wpdb->prepare( "SELECT job_id FROM {$wpdb->prefix}icl_translate WHERE field_type = 'original_id' AND field_data_translated = %d", $post_id);
+//
+//                $job_id = $wpdb->get_col($sql);
+//
+//                if (is_array($job_id) && isset($job_id[0])) {
+//
+//                    $url_params = array(
+//                        'page' => 'wpml-translation-management/menu/translations-queue.php',
+//                        'return_url' => get_permalink($post_id),
+//                        'action' => 'edit',
+//                        'lang' => ICL_LANGUAGE_CODE,
+//                        'job_id' => $job_id[0]
+//                    );
+//
+//                    $link = add_query_arg($url_params, admin_url('admin.php') );
+//                }
+//            }
+//            return $link;
+//        }, 20, 3);
 
 	}
 

@@ -78,10 +78,17 @@ class Page_For_Post_Types_Public {
 			$shared = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
 
 			$page_for = $shared->get_page_for( $post_type_name );
+//            var_dump($page_for);
+            $page_for = apply_filters( 'wpml_object_id', $page_for, 'page' );
+            
+     
+//            var_dump($page_for);
 			if ( ! $page_for ) {
 
 				return $args;
 			}
+
+//			var_dump($shared->get_rewrite_slug( $page_for ));
 
 			$args['rewrite'] = [
 				'slug'       => $shared->get_rewrite_slug( $page_for ),

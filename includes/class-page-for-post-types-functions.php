@@ -28,7 +28,7 @@ class Page_For_Post_Types_Functions {
 	 * @since 1.0.0
 	 */
 	public static function get_page_for( $suffix ) {
-
+        // var_dump(get_option( Page_For_Post_Types_Functions::option_name( $suffix ) ));
 		return get_option( Page_For_Post_Types_Functions::option_name( $suffix ) );
 	}
 
@@ -48,6 +48,9 @@ class Page_For_Post_Types_Functions {
 
 		$id = 0 === intval( $id ) ? self::get_page_for( $name ) : $id;
 
+//		var_dump($id);
+        $id = apply_filters( 'wpml_object_id', $id, $name );
+        var_dump($id);
 		return (object) [ 'name' => $name, 'label' => $label, 'id' => $id, $disable_editor, $notice ];
 	}
 
